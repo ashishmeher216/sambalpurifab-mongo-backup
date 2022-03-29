@@ -1,0 +1,21 @@
+{
+  "name": "mongo-backup-node",
+  "version": "1.0.0",
+  "description": "The relevant comments are inside the `app.js` file",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "devStart": "nodemon ./app.js",
+    "start": "node ./app,js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "node-cron": "^3.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
