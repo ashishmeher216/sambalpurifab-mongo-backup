@@ -20,12 +20,13 @@ Using mongorestore - without any args:
 // 2. Cron expression for every night at 00:00 hours (0 0 * * * )
 // Note: 2nd expression only contains 5 fields, since seconds is not necessary
 
-// Scheduling the backup every 5 seconds (using node-cron)
-cron.schedule('*/5 * * * * *', () => backupMongoDB());
+// Scheduling the backup everyday at midnight seconds (using node-cron)
+cron.schedule('0 0 * * *', () => backupMongoDB());
+// cron.schedule('*/5 * * * * *', () => backupMongoDB());  every 5 seconds
 
 function backupMongoDB() {
   const d = new Date();
-  const ARCHIVE_PATH = path.join(__dirname, 'backups', `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}.gz`);
+  const ARCHIVE_PATH = path.join(__dirname, '../backups', `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}.gz`);
   const child = spawn('mongodump', [
     `--forceTableScan`,
     `--uri=mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.ccvfl.mongodb.net/${process.env.MONGO_DB_DATABASE}`,
