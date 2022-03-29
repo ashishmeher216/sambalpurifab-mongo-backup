@@ -20,9 +20,9 @@ Using mongorestore - without any args:
 // 2. Cron expression for every night at 00:00 hours (0 0 * * * )
 // Note: 2nd expression only contains 5 fields, since seconds is not necessary
 
-// Scheduling the backup everyday at midnight seconds (using node-cron)
+// Scheduling the backup everyday at midnight (using node-cron)
 cron.schedule('0 0 * * *', () => backupMongoDB());
-// cron.schedule('*/5 * * * * *', () => backupMongoDB());  every 5 seconds
+//cron.schedule('*/5 * * * * *', () => backupMongoDB());  //every 5 seconds
 
 function backupMongoDB() {
   const d = new Date();
