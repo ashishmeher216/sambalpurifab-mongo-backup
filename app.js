@@ -22,16 +22,16 @@ Using mongorestore - without any args:
 
 // Scheduling the backup everyday at midnight (using node-cron)
 cron.schedule('0 0 * * *', () => backupMongoDB());
-//cron.schedule('*/5 * * * * *', () => backupMongoDB());  //every 5 seconds
+// cron.schedule('*/60 * * * * *', () => backupMongoDB());  //every 60 seconds
 
 function backupMongoDB() {
   const d = new Date();
-  const ARCHIVE_PATH = path.join(__dirname, '../backups', `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}.gz`);
+  const ARCHIVE_PATH = path.join(__dirname, '../../mongo-backups', `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`);
   const child = spawn('mongodump', [
     `--forceTableScan`,
     `--uri=mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@cluster0.ccvfl.mongodb.net/${process.env.MONGO_DB_DATABASE}`,
-    `--archive=${ARCHIVE_PATH}`,
-    '--gzip',
+    `--out=${ARCHIVE_PATH}`,
+    // '--gzip',
   ]);
 
   child.stdout.on('data', (data) => {
