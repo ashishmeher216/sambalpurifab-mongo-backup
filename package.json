@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "adm-zip": "^0.5.10",
+    "aws-sdk": "^2.1479.0",
     "dotenv": "^16.0.0",
     "node-cron": "^3.0.0"
   },
