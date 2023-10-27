@@ -30,11 +30,8 @@ const MONGO_URL = `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONG
 const mongoUrl = MONGO_URL;
 const bucketName = process.env.S3_BUCKET;
 const s3bucket = new AWS.S3({
-  params: {
     accessKeyId: process.env.MY_AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.MY_AWS_SECRET_ACCESS_KEY,
-    Bucket: bucketName
-  }
 });
 const s3StorageClass = process.env.S3_STORAGE_CLASS;
 const folderPrefix = process.env.FOLDER_PREFIX;
@@ -43,15 +40,13 @@ function backupMongoDB() {
   const d = new Date();
   const fileName = `${d.getDate()}-${d.getMonth() + 1}-${d.getFullYear()}`;
   
-  // const fileName = fileName;
   const folderName = `/tmp/${fileName}/`;
   let zipBuffer = null;
 
   const child = spawn('mongodump', [
     `--forceTableScan`,
     `--uri=${mongoUrl}`,
-    `--out=${folderName}`,
-    // '--gzip',
+    `--out=${folderName}`
   ]);
 
   child.stdout.on('data', (data) => {
@@ -72,20 +67,21 @@ function backupMongoDB() {
         zip.addLocalFolder(folderName)
         zipBuffer = zip.toBuffer()
       } catch (err) {
-        throw new Error('archive creation failed: ', err)
+        console.log('archive creation failed: ', err)
       }
       try {
         await s3bucket.upload({
+          Bucket: bucketName,
           Key: `${folderPrefix}/${fileName}.zip`,
           Body: zipBuffer,
           ContentType: 'application/zip',
           ServerSideEncryption: 'AES256',
           StorageClass: s3StorageClass
         }).promise()
+        console.log('Backup is successfull ✅');
       } catch (err) {
-        throw new Error('upload to S3 failed: ', err)
+        console.log('upload to S3 failed: ', err)
       }
-      console.log('Backup is successfull ✅');
     }
   });
 }
