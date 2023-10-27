@@ -22,9 +22,9 @@ Using mongorestore - without any args:
 // Note: 2nd expression only contains 5 fields, since seconds is not necessary
 
 // Scheduling the backup everyday at midnight (using node-cron)
-cron.schedule('*/60 * * * * *', () => backupMongoDB());  //every 60 seconds
+// cron.schedule('*/60 * * * * *', () => backupMongoDB());  //every 60 seconds
 // cron.schedule('*/2 * * * *', () => backupMongoDB());  //every 2 minutes
-// cron.schedule('0 0 * * *', () => backupMongoDB());    //every midnight
+cron.schedule('0 0 * * *', () => backupMongoDB());    //every midnight
 
 const MONGO_URL = `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@${process.env.MONGO_DB_HOST}/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority`;
 const mongoUrl = MONGO_URL;
