@@ -14,6 +14,9 @@ Using mongodump - without any args:
   will dump each and every db into a folder called "dump" in the directory from where it was executed.
 Using mongorestore - without any args:
   will try to restore every database from "dump" folder in current directory, if "dump" folder does not exist then it will simply fail.
+
+To restore to remote DB,
+  mongorestore --uri="mongodb+srv://<USERNAME>:<PASSWORD>@<CLUSTER_NAME>.mongodb.net/<TARGET_DATABASE_NAME>" --drop --gzip <path_to_dump_folder>
 */
 
 
@@ -26,7 +29,7 @@ Using mongorestore - without any args:
 // cron.schedule('*/2 * * * *', () => backupMongoDB());  //every 2 minutes
 cron.schedule('0 0 * * *', () => backupMongoDB());    //every midnight
 
-const MONGO_URL = `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@${process.env.MONGO_DB_HOST}/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority`;
+const MONGO_URL = `mongodb+srv://${process.env.MONGO_DB_USER}:${process.env.MONGO_DB_PASSWORD}@${process.env.MONGO_DB_CLUSTER}/${process.env.MONGO_DB_DATABASE}?retryWrites=true&w=majority`;
 const mongoUrl = MONGO_URL;
 const bucketName = process.env.S3_BUCKET;
 const s3bucket = new AWS.S3({
@@ -46,7 +49,8 @@ function backupMongoDB() {
   const child = spawn('mongodump', [
     `--forceTableScan`,
     `--uri=${mongoUrl}`,
-    `--out=${folderName}`
+    `--out=${folderName}`,
+    `--gzip`
   ]);
 
   child.stdout.on('data', (data) => {
